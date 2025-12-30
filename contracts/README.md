@@ -104,6 +104,18 @@ npx hardhat compile
 npx hardhat test
 ```
 
+### Gas Report
+
+**On PowerShell (Windows):**
+```powershell
+$env:REPORT_GAS="true"; npx hardhat test
+```
+
+**On Linux/Mac:**
+```bash
+REPORT_GAS="true" npx hardhat test
+```
+
 ### Coverage
 
 ```bash
@@ -153,6 +165,33 @@ CashbackManager.sol    |    98.08 |    89.39 |      100 |    98.33 |
 - Limit enforcement
 - Admin controls
 - Security scenarios
+
+---
+
+## ⛽ Gas Report
+
+### Deployment Cost
+
+| Contract | Gas Used | % of Block Limit |
+|----------|----------|------------------|
+| `CashbackManager` | 752,932 | 2.5% |
+
+### Method Gas Costs
+
+| Method | Min | Max | Avg | # Calls |
+|--------|-----|-----|-----|---------|
+| `pause` | - | - | 27,671 | 8 |
+| `processTransaction` | 63,985 | 115,300 | **90,273** | 37 |
+| `registerRule` | 160,484 | 160,496 | **160,486** | 34 |
+| `transferAdmin` | - | - | 28,461 | 4 |
+| `unpause` | - | - | 27,412 | 1 |
+| `withdrawFunds` | - | - | 32,064 | 4 |
+
+**Key Insights:**
+- ✅ **Highly optimized** with `viaIR: true` and `runs: 200`
+- ✅ `processTransaction` averages **~90k gas** - excellent for main user interaction
+- ✅ `registerRule` at **~160k gas** - reasonable for admin-only operation
+- ✅ Emergency functions (`pause`/`unpause`) are very gas-efficient at **~27k gas**
 
 ---
 
